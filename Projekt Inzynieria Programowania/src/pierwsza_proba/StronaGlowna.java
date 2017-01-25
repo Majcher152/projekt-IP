@@ -20,6 +20,9 @@ import java.awt.Font;
 import javax.swing.LayoutStyle.ComponentPlacement;
 
 import java.awt.Color;
+import javax.swing.JPasswordField;
+import javax.swing.SpringLayout;
+import javax.swing.UIManager;
 
 public class StronaGlowna {
 
@@ -29,7 +32,7 @@ public class StronaGlowna {
 	private Socket socket = null;
 	private boolean flag = true;
 	private JTextField textField_login;
-	private JTextField textField_haslo;
+	private JPasswordField passwordField;
  
 	/**
 	 * Create the application.
@@ -72,45 +75,43 @@ public class StronaGlowna {
 		JLabel lblHaslo = new JLabel("Haslo:");
 		lblHaslo.setFont(new Font("Tahoma", Font.PLAIN, 15));
 
-		textField_haslo = new JTextField();
-		textField_haslo.setFont(new Font("Tahoma", Font.PLAIN, 15));
-		textField_haslo.setColumns(10);
-
 		JButton btnWyjscie = new JButton("Wyjscie");
-		btnWyjscie.setBackground(new Color(255, 255, 255));
-
+		btnWyjscie.setBackground(UIManager.getColor("ToggleButton.light"));
+		btnWyjscie.addActionListener(myAction);
 
 		
 
 		JButton btnZaloguj = new JButton("Zaloguj");
-		btnZaloguj.setBackground(new Color(255, 255, 255));
+		btnZaloguj.setBackground(UIManager.getColor("ToggleButton.light"));
 		btnZaloguj.addActionListener(myAction);
-		GroupLayout groupLayout = new GroupLayout(frame.getContentPane());
-		groupLayout.setHorizontalGroup(groupLayout.createParallelGroup(Alignment.LEADING)
-				.addGroup(groupLayout
-						.createSequentialGroup().addGroup(groupLayout.createParallelGroup(Alignment.LEADING, false)
-								.addGroup(groupLayout.createSequentialGroup().addGap(184).addComponent(lblWitaj))
-								.addGroup(groupLayout.createSequentialGroup().addContainerGap()
-										.addComponent(lblLogin).addGap(18).addComponent(textField_login,
-												GroupLayout.PREFERRED_SIZE, 200, GroupLayout.PREFERRED_SIZE))
-								.addGroup(groupLayout.createSequentialGroup().addContainerGap().addComponent(lblHaslo)
-										.addGap(18).addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
-												.addComponent(btnZaloguj).addComponent(textField_haslo))))
-						.addContainerGap(168, Short.MAX_VALUE))
-				.addGroup(Alignment.TRAILING, groupLayout.createSequentialGroup().addContainerGap(335, Short.MAX_VALUE)
-						.addComponent(btnWyjscie).addContainerGap()));
-		groupLayout.setVerticalGroup(groupLayout.createParallelGroup(Alignment.LEADING).addGroup(groupLayout
-				.createSequentialGroup().addContainerGap().addComponent(lblWitaj).addGap(27)
-				.addGroup(groupLayout.createParallelGroup(Alignment.BASELINE).addComponent(lblLogin).addComponent(
-						textField_login, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE,
-						GroupLayout.PREFERRED_SIZE))
-				.addGap(28)
-				.addGroup(groupLayout.createParallelGroup(Alignment.BASELINE).addComponent(lblHaslo).addComponent(
-						textField_haslo, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE,
-						GroupLayout.PREFERRED_SIZE))
-				.addGap(18).addComponent(btnZaloguj).addPreferredGap(ComponentPlacement.RELATED, 41, Short.MAX_VALUE)
-				.addComponent(btnWyjscie).addContainerGap()));
-		frame.getContentPane().setLayout(groupLayout);
+		SpringLayout springLayout = new SpringLayout();
+		springLayout.putConstraint(SpringLayout.SOUTH, btnWyjscie, -10, SpringLayout.SOUTH, frame.getContentPane());
+		springLayout.putConstraint(SpringLayout.EAST, btnWyjscie, -10, SpringLayout.EAST, frame.getContentPane());
+		springLayout.putConstraint(SpringLayout.NORTH, lblHaslo, 120, SpringLayout.NORTH, frame.getContentPane());
+		springLayout.putConstraint(SpringLayout.WEST, lblHaslo, 10, SpringLayout.WEST, frame.getContentPane());
+		springLayout.putConstraint(SpringLayout.NORTH, textField_login, 67, SpringLayout.NORTH, frame.getContentPane());
+		springLayout.putConstraint(SpringLayout.WEST, textField_login, 66, SpringLayout.WEST, frame.getContentPane());
+		springLayout.putConstraint(SpringLayout.EAST, textField_login, 266, SpringLayout.WEST, frame.getContentPane());
+		springLayout.putConstraint(SpringLayout.NORTH, lblLogin, 70, SpringLayout.NORTH, frame.getContentPane());
+		springLayout.putConstraint(SpringLayout.WEST, lblLogin, 10, SpringLayout.WEST, frame.getContentPane());
+		springLayout.putConstraint(SpringLayout.NORTH, lblWitaj, 11, SpringLayout.NORTH, frame.getContentPane());
+		springLayout.putConstraint(SpringLayout.WEST, lblWitaj, 184, SpringLayout.WEST, frame.getContentPane());
+		frame.getContentPane().setLayout(springLayout);
+		
+		passwordField = new JPasswordField();
+		springLayout.putConstraint(SpringLayout.NORTH, btnZaloguj, 23, SpringLayout.SOUTH, passwordField);
+		springLayout.putConstraint(SpringLayout.WEST, btnZaloguj, 0, SpringLayout.WEST, passwordField);
+		springLayout.putConstraint(SpringLayout.NORTH, passwordField, -3, SpringLayout.NORTH, lblHaslo);
+		springLayout.putConstraint(SpringLayout.WEST, passwordField, 0, SpringLayout.WEST, textField_login);
+		springLayout.putConstraint(SpringLayout.EAST, passwordField, 0, SpringLayout.EAST, textField_login);
+		passwordField.setFont(new Font("Tahoma", Font.PLAIN, 15));
+		frame.getContentPane().add(passwordField);
+		frame.getContentPane().add(lblWitaj);
+		frame.getContentPane().add(lblLogin);
+		frame.getContentPane().add(textField_login);
+		frame.getContentPane().add(lblHaslo);
+		frame.getContentPane().add(btnZaloguj);
+		frame.getContentPane().add(btnWyjscie);
 	}
 
 	private class MyActionListener implements ActionListener {
@@ -121,7 +122,7 @@ public class StronaGlowna {
 			switch (co) {
 			case "Zaloguj":
 				String login = textField_login.getText();
-				String haslo1 = textField_haslo.getText();
+				String haslo1 = passwordField.getText();
 				if (sprawdzanieHasla(login, haslo1)) {
 					new ZalogujPracownik(login, socket);
 					frame.setVisible(false);

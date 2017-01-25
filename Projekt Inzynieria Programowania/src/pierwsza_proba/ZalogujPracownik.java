@@ -30,7 +30,7 @@ public class ZalogujPracownik {
 	private boolean flag = true;
 	private PrintWriter output = null;
 	private BufferedReader input = null;
- 
+
 	public ZalogujPracownik(String login, Socket socket) {
 		this.login = login;
 		this.socket = socket;
@@ -65,7 +65,7 @@ public class ZalogujPracownik {
 
 		JButton btnDodajProdukt = new JButton("1. Dodaj produkt");
 		btnDodajProdukt.setFont(new Font("Tahoma", Font.PLAIN, 12));
-		btnWyloguj.addActionListener(myAction);
+		btnDodajProdukt.addActionListener(myAction);
 
 		JButton btnZlozZamowienie = new JButton("2. Zloz zamowienie");
 		btnZlozZamowienie.setFont(new Font("Tahoma", Font.PLAIN, 12));
@@ -88,11 +88,9 @@ public class ZalogujPracownik {
 		textArea.setEditable(false);
 		textArea.setText(login);
 		GroupLayout groupLayout = new GroupLayout(frame.getContentPane());
-		groupLayout.setHorizontalGroup(groupLayout.createParallelGroup(Alignment.LEADING)
-				.addGroup(groupLayout.createSequentialGroup().addContainerGap(353, Short.MAX_VALUE)
-						.addComponent(btnWyloguj).addContainerGap())
-				.addGroup(groupLayout.createSequentialGroup().addGap(25).addGroup(groupLayout
-						.createParallelGroup(Alignment.TRAILING)
+		groupLayout.setHorizontalGroup(groupLayout.createParallelGroup(Alignment.LEADING).addGroup(groupLayout
+				.createSequentialGroup().addGap(25)
+				.addGroup(groupLayout.createParallelGroup(Alignment.TRAILING)
 						.addGroup(groupLayout.createSequentialGroup().addComponent(lblWCzymMoge).addGap(71)
 								.addComponent(textArea, GroupLayout.PREFERRED_SIZE, 59, GroupLayout.PREFERRED_SIZE))
 						.addGroup(groupLayout.createParallelGroup(Alignment.TRAILING, false)
@@ -106,17 +104,20 @@ public class ZalogujPracownik {
 										GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
 								.addComponent(btnDodajProdukt, Alignment.LEADING, GroupLayout.DEFAULT_SIZE, 381,
 										Short.MAX_VALUE)))
-						.addContainerGap(28, Short.MAX_VALUE)));
-		groupLayout.setVerticalGroup(groupLayout.createParallelGroup(Alignment.TRAILING).addGroup(groupLayout
-				.createSequentialGroup().addContainerGap()
-				.addGroup(groupLayout.createParallelGroup(Alignment.LEADING).addComponent(lblWCzymMoge).addComponent(
-						textArea, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
-				.addGap(11).addComponent(btnDodajProdukt).addPreferredGap(ComponentPlacement.UNRELATED)
-				.addComponent(btnZlozZamowienie).addPreferredGap(ComponentPlacement.UNRELATED)
-				.addComponent(btnWyszukiwanie).addPreferredGap(ComponentPlacement.UNRELATED)
-				.addComponent(btnAnalizaProdukt).addPreferredGap(ComponentPlacement.UNRELATED).addComponent(btnMojeDane)
-				.addPreferredGap(ComponentPlacement.RELATED, 25, Short.MAX_VALUE).addComponent(btnWyloguj)
-				.addContainerGap()));
+				.addContainerGap(28, Short.MAX_VALUE))
+				.addGroup(Alignment.TRAILING, groupLayout.createSequentialGroup().addContainerGap(353, Short.MAX_VALUE)
+						.addComponent(btnWyloguj).addContainerGap()));
+		groupLayout.setVerticalGroup(groupLayout.createParallelGroup(Alignment.TRAILING).addGroup(Alignment.LEADING,
+				groupLayout.createSequentialGroup().addContainerGap()
+						.addGroup(groupLayout.createParallelGroup(Alignment.LEADING).addComponent(lblWCzymMoge)
+								.addComponent(textArea, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE,
+										GroupLayout.PREFERRED_SIZE))
+						.addGap(11).addComponent(btnDodajProdukt).addPreferredGap(ComponentPlacement.UNRELATED)
+						.addComponent(btnZlozZamowienie).addPreferredGap(ComponentPlacement.UNRELATED)
+						.addComponent(btnWyszukiwanie).addPreferredGap(ComponentPlacement.UNRELATED)
+						.addComponent(btnAnalizaProdukt).addPreferredGap(ComponentPlacement.UNRELATED)
+						.addComponent(btnMojeDane).addPreferredGap(ComponentPlacement.RELATED, 26, Short.MAX_VALUE)
+						.addComponent(btnWyloguj).addContainerGap()));
 		frame.getContentPane().setLayout(groupLayout);
 	}
 
@@ -127,26 +128,35 @@ public class ZalogujPracownik {
 			String co = ((JButton) e.getSource()).getText();
 			switch (co) {
 			case "1. Dodaj produkt":
+				frame.setVisible(false);
+				new DodajProdukt(socket);
 				break;
 			case "2. Zloz zamowienie":
+				frame.setVisible(false);
+				new ZlozZamowienie(socket);
 				break;
 			case "3. Wyszukiwanie":
+				frame.setVisible(false);
+				new Wyszukiwanie(socket);
 				break;
-			case "4. Analiza produktu pod wzgledem daty waznosc":
+			case "4. Analiza produktow pod wzgledem daty waznosc":
+				frame.setVisible(false);
+				new AnalizaProduktow(socket);
 				break;
 			case "5. Moje dane":
+				frame.setVisible(false);
+				new MojeDane(socket);
 				break;
 			case "Wyloguj":
-				// int tmp = JOptionPane.showConfirmDialog(null, "Czy na pewno
-				// chcesz sie wylogowac?");
-				// if (tmp == JOptionPane.YES_OPTION) {
-				String mess = "Wyloguj";
-				io(output, input, mess);
-				frame.setVisible(false);
-				new StronaGlowna(socket);
+				int tmp = JOptionPane.showConfirmDialog(null, "Czy na pewno chcesz sie wylogowac?");
+				if (tmp == JOptionPane.YES_OPTION) {
+					String mess = "Wyloguj";
+					io(output, input, mess);
+					frame.setVisible(false);
+					new StronaGlowna(socket);
+					break;
+				}
 				break;
-				// }
-			//	break;
 			}
 
 		}
@@ -164,7 +174,6 @@ public class ZalogujPracownik {
 			flag = true;
 			output.println(mess);
 			output.flush();
-		//	System.out.println("1");
 			while (flag) {
 				try {
 					if (input.ready()) {

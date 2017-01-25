@@ -10,7 +10,7 @@ import java.util.ArrayList;
 
 public class ObslugaZadan extends Thread {
 	private int paczka_ID = 0;
-	 // Strumienie gniazda komunikacji z klientem(odczyt + zapis)
+	// Strumienie gniazda komunikacji z klientem(odczyt + zapis)
 	private BufferedReader in = null;
 	private PrintWriter out = null;
 	// Gniazdo klienta
@@ -45,15 +45,17 @@ public class ObslugaZadan extends Thread {
 				}
 			} catch (Exception exc) {
 				System.out.println(flag + " 2");
-
 				exc.printStackTrace();
+				System.out.println(flag + " 3");
+				// Zamkniecie gniazda klienta
 				try {
-					System.out.println(flag + " 3");
-					// Zamkniecie gniazda klienta
 					connection.close();
-					flag = false;
-				} catch (Exception e) {
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
 				}
+				flag = false;
+
 			}
 		}
 
@@ -67,7 +69,7 @@ public class ObslugaZadan extends Thread {
 			out.println(czyHasloPoprawne + " ... OK");
 			out.flush();
 		} else if (komunikat.contains("Wyloguj")) {
-			out.println(komunikat + " ... OK1");
+			out.println(komunikat + " ... OK");
 			out.flush();
 		} else if (komunikat.contains("Wyjscie")) {
 			out.println(komunikat + " ... Exit");
